@@ -17,7 +17,6 @@
 package io.helidon.integrations.vault.auths.token;
 
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 import io.helidon.integrations.common.rest.RestApi;
@@ -35,7 +34,7 @@ import jakarta.annotation.Priority;
  */
 @Priority(5000)
 public class TokenVaultAuth implements VaultAuth {
-    private static final Logger LOGGER = Logger.getLogger(TokenVaultAuth.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(TokenVaultAuth.class.getName());
     private final String token;
     private final String baseNamespace;
 

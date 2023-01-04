@@ -22,8 +22,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.common.LazyValue;
 import io.helidon.common.http.Http;
@@ -38,7 +36,7 @@ import io.helidon.webserver.ServerResponse;
  */
 public abstract class OpenApiUiBase implements OpenApiUi {
 
-    private static final Logger LOGGER = Logger.getLogger(OpenApiUiBase.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(OpenApiUiBase.class.getName());
 
     private static final LazyValue<OpenApiUiFactory<?, ?>> UI_FACTORY = LazyValue.create(OpenApiUiBase::loadUiFactory);
 

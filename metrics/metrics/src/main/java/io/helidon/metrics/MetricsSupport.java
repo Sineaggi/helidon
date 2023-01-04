@@ -31,7 +31,6 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -111,7 +110,7 @@ public final class MetricsSupport extends HelidonRestServiceSupport
 
     private final MetricsSettings metricsSettings;
 
-    private static final Logger LOGGER = Logger.getLogger(MetricsSupport.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(MetricsSupport.class.getName());
 
     /**
      * Creates a new {@code  MetricsSupport} instance from the provided builder.
@@ -676,7 +675,7 @@ public final class MetricsSupport extends HelidonRestServiceSupport
             }
             MetricsSupport result = factory.apply(this);
             if (!result.metricsSettings.baseMetricsSettings().isEnabled()) {
-                LOGGER.finest("Metrics support for base metrics is disabled in settings");
+                LOGGER.log(System.Logger.Level.TRACE, "Metrics support for base metrics is disabled in settings");
             }
 
             return result;

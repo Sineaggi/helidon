@@ -42,8 +42,7 @@ module io.helidon.grpc.core {
 
     requires jakarta.annotation;
     requires static jakarta.json.bind;
-    requires java.logging;
-    requires java.naming;
+        requires java.naming;
 
     requires jakarta.inject;
 

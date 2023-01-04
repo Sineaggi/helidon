@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Flow;
-import java.util.logging.Logger;
 
 import io.helidon.common.http.DataChunk;
 import io.helidon.common.http.Http;
@@ -35,7 +34,7 @@ import io.helidon.media.common.MessageBodyReaderContext;
  */
 final class WebClientResponseImpl implements WebClientResponse {
 
-    private static final Logger LOGGER = Logger.getLogger(NettyClientHandler.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(NettyClientHandler.class.getName());
 
     private final WebClientResponseHeadersImpl headers;
     private final Flow.Publisher<DataChunk> publisher;

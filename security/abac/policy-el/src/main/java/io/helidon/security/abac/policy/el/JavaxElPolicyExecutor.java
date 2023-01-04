@@ -19,8 +19,6 @@ package io.helidon.security.abac.policy.el;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.common.Errors;
 import io.helidon.config.Config;
@@ -44,7 +42,7 @@ import jakarta.el.VariableMapper;
  * .oracle.com/javaee/7/tutorial/jsf-el005.htm#BNAIK</a>
  */
 public final class JavaxElPolicyExecutor implements PolicyExecutor {
-    private static final Logger LOGGER = Logger.getLogger(JavaxElPolicyExecutor.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(JavaxElPolicyExecutor.class.getName());
     private static final AttributeResolver ATTRIBUTE_RESOLVER = new AttributeResolver();
 
     private final ExpressionFactory ef;
@@ -111,7 +109,7 @@ public final class JavaxElPolicyExecutor implements PolicyExecutor {
                 collector.fatal(this, "Policy statement \"" + policyStatement + "\" evaluated to false");
             }
         } catch (Exception e) {
-            LOGGER.log(Level.FINEST, e, () -> "Statement " + policyStatement + " evaluation failed");
+            LOGGER.log(System.Logger.Level.TRACE, e, () -> "Statement " + policyStatement + " evaluation failed");
             throw new SecurityException("Policy statement \"" + policyStatement + "\" evaluated to an exception", e);
         }
     }

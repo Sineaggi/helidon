@@ -18,7 +18,6 @@
  * Implementation of the non-CDI parts of Eclipse MicroProfile Config specification.
  */
 module io.helidon.config.mp {
-    requires java.logging;
     requires io.helidon.common;
     requires io.helidon.config;
     requires transitive microprofile.config.api;

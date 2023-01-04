@@ -23,7 +23,6 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import io.helidon.common.Errors;
 import io.helidon.common.configurable.Resource;
@@ -65,7 +64,7 @@ import io.helidon.security.util.TokenHandler;
  * JWK files are expected (one for verification, one for signatures).
  */
 public final class JwtProvider extends SynchronousProvider implements AuthenticationProvider, OutboundSecurityProvider {
-    private static final Logger LOGGER = Logger.getLogger(JwtProvider.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(JwtProvider.class.getName());
 
     /**
      * Configure this for outbound requests to override user to use.

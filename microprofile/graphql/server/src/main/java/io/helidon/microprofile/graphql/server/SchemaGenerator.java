@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -138,7 +137,7 @@ class SchemaGenerator {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(SchemaGenerator.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(SchemaGenerator.class.getName());
 
     /**
      * {@link JandexUtils} instance to hold indexes.
@@ -170,7 +169,7 @@ class SchemaGenerator {
             String message = "Unable to find or load jandex index files: "
                     + jandexUtils.getIndexFile() + ".\nEnsure you are using the "
                     + "jandex-maven-plugin when you are building your application";
-            LOGGER.warning(message);
+            LOGGER.log(System.Logger.Level.WARNING, message);
         }
     }
 
@@ -335,7 +334,7 @@ class SchemaGenerator {
 
         // process the @GraphQLApi annotated classes
         if (rootQueryType.fieldDefinitions().size() == 0 && rootMutationType.fieldDefinitions().size() == 0) {
-            LOGGER.warning("Unable to find any classes with @GraphQLApi annotation."
+            LOGGER.log(System.Logger.Level.WARNING, "Unable to find any classes with @GraphQLApi annotation."
                                    + "Unable to build schema");
         }
 
@@ -1094,7 +1093,7 @@ class SchemaGenerator {
                         || nonNullAnnotation != null && defaultValue == null;
 
             } catch (NoSuchFieldException ignored) {
-                LOGGER.fine("No such field " + pd.getName() + " on class " + clazz.getName());
+                LOGGER.log(Level.DEBUG, "No such field " + pd.getName() + " on class " + clazz.getName());
             }
 
             if (fieldHasIdAnnotation || method.getAnnotation(Id.class) != null) {

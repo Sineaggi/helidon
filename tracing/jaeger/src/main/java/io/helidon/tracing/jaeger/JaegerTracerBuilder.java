@@ -19,7 +19,6 @@ package io.helidon.tracing.jaeger;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 import io.helidon.config.metadata.Configured;
@@ -140,7 +139,7 @@ import io.opentelemetry.semconv.resource.attributes.ResourceAttributes;
  */
 @Configured(prefix = "tracing", root = true, description = "Jaeger tracer configuration.")
 public class JaegerTracerBuilder implements TracerBuilder<JaegerTracerBuilder> {
-    static final Logger LOGGER = Logger.getLogger(JaegerTracerBuilder.class.getName());
+    static final System.Logger LOGGER = System.getLogger(JaegerTracerBuilder.class.getName());
 
     static final boolean DEFAULT_ENABLED = true;
     static final String DEFAULT_HTTP_HOST = "localhost";

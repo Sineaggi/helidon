@@ -22,13 +22,12 @@ import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Logger;
 
 import org.junit.jupiter.api.Assertions;
 
 public class TidyTestExecutor extends ThreadPoolExecutor {
 
-    private static final Logger LOGGER = Logger.getLogger(TidyTestExecutor.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(TidyTestExecutor.class.getName());
 
     private final ConcurrentLinkedQueue<Future<?>> futures = new ConcurrentLinkedQueue<>();
     private final AtomicReference<State> state = new AtomicReference<>(State.READY);
@@ -89,7 +88,7 @@ public class TidyTestExecutor extends ThreadPoolExecutor {
         WAITING {
             @Override
             boolean submit(final Runnable runnable, TidyTestExecutor tidyTestExecutor) {
-                LOGGER.warning("Cannot submit, executor is waiting for cleanup!");
+                LOGGER.log(System.Logger.Level.WARNING, "Cannot submit, executor is waiting for cleanup!");
                 return false;
             }
         };

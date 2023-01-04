@@ -16,15 +16,15 @@
 
 package io.helidon.lra.coordinator;
 
+import java.lang.System.Logger.Level;
 import java.net.URI;
 import java.util.StringJoiner;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 class Link {
 
-    private static final Logger LOGGER = Logger.getLogger(Link.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(Link.class.getName());
 
     //Example: rel="status"
     static final Pattern LINK_PROP_PATTERN = Pattern.compile("\\s*(?<key>[a-zA-Z]+)=\"(?<value>[^\"]*)\"\\s*");
@@ -61,7 +61,7 @@ class Link {
                         link.type = value;
                         break;
                     default:
-                        LOGGER.fine(() -> "Unexpected link property " + key + ": " + value);
+                        LOGGER.log(Level.DEBUG, () -> "Unexpected link property " + key + ": " + value);
                 }
             }
         }

@@ -25,7 +25,6 @@ import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 import io.helidon.common.Errors;
 import io.helidon.common.LazyValue;
@@ -346,7 +345,7 @@ public final class OidcConfig extends TenantConfigImpl {
     static final String DEFAULT_COOKIE_NAME = "JSESSIONID";
     static final String DEFAULT_TENANT_COOKIE_NAME = "HELIDON_TENANT";
 
-    private static final Logger LOGGER = Logger.getLogger(OidcConfig.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(OidcConfig.class.getName());
 
     private final Map<String, TenantConfig> tenantConfigurations;
     private final String redirectUri;
@@ -415,7 +414,7 @@ public final class OidcConfig extends TenantConfigImpl {
         this.jaxrsClientBuilderSupplier = builder.jaxrsClientBuilderSupplier;
         this.defaultTenant = LazyValue.create(() -> Tenant.create(this, this));
 
-        LOGGER.finest(() -> "Redirect URI with host: " + frontendUri + redirectUri);
+        LOGGER.log(System.Logger.Level.TRACE, () -> "Redirect URI with host: " + frontendUri + redirectUri);
     }
 
     /**

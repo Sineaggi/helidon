@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import io.helidon.common.context.Context;
@@ -282,7 +281,7 @@ public interface WebServer {
                                    ParentingMediaContextBuilder<Builder>,
                                    MediaContextBuilder<Builder> {
 
-        private static final Logger LOGGER = Logger.getLogger(Builder.class.getName());
+        private static final System.Logger LOGGER = System.getLogger(Builder.class.getName());
         private static final MediaContext DEFAULT_MEDIA_SUPPORT = MediaContext.create();
         private final Map<String, RouterImpl.Builder> routingBuilders = new HashMap<>();
         private final DirectHandlers.Builder directHandlers = DirectHandlers.builder();
@@ -310,7 +309,7 @@ public interface WebServer {
         @Override
         public WebServer build() {
             if (routingBuilders.get(WebServer.DEFAULT_SOCKET_NAME) == null) {
-                LOGGER.warning("Creating a web server with no default routing configured.");
+                LOGGER.log(System.Logger.Level.WARNING, "Creating a web server with no default routing configured.");
                 routingBuilders.put(WebServer.DEFAULT_SOCKET_NAME, RouterImpl.builder());
             }
             if (explicitConfig == null) {

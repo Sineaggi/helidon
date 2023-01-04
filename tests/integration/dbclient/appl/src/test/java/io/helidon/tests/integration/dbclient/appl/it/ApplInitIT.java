@@ -15,8 +15,6 @@
  */
 package io.helidon.tests.integration.dbclient.appl.it;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
@@ -38,7 +36,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 @TestMethodOrder(OrderAnnotation.class)
 public class ApplInitIT {
 
-    private static final Logger LOGGER = Logger.getLogger(ApplInitIT.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(ApplInitIT.class.getName());
 
     private final TestServiceClient testClient = TestClient.builder()
             .port(HelidonProcessRunner.HTTP_PORT)
@@ -48,15 +46,15 @@ public class ApplInitIT {
     // Test executor methods
 
     private void executeTest(final String testName) {
-        LOGGER.fine(() -> String.format("Running %s", testName));
+        LOGGER.log(Level.DEBUG, () -> String.format("Running %s", testName));
         JsonObject data = testClient
                 .callServiceAndGetData(testName)
                 .asJsonObject();
-        LogData.logJsonObject(Level.FINER, data);
+        LogData.logJsonObject(Level.TRACE, data);
     }
 
     private void executeInit(final String testName) {
-        LOGGER.fine(() -> String.format("Running %s", testName));
+        LOGGER.log(Level.DEBUG, () -> String.format("Running %s", testName));
         JsonValue data = testClient
                 .callServiceAndGetData(testName);
         Long count = JsonTools.getLong(data);

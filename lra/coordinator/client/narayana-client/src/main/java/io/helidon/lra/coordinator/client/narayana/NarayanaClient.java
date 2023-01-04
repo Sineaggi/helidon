@@ -15,6 +15,8 @@
  */
 package io.helidon.lra.coordinator.client.narayana;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.net.URI;
 import java.time.Duration;
 import java.util.List;
@@ -23,8 +25,6 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -51,7 +51,7 @@ import static org.eclipse.microprofile.lra.annotation.ws.rs.LRA.LRA_HTTP_RECOVER
  */
 public class NarayanaClient implements CoordinatorClient {
 
-    private static final Logger LOGGER = Logger.getLogger(NarayanaClient.class.getName());
+    private static final Logger LOGGER = System.getLogger(NarayanaClient.class.getName());
 
     private static final int RETRY_ATTEMPTS = 5;
     private static final String QUERY_PARAM_CLIENT_ID = "ClientID";
@@ -147,7 +147,7 @@ public class NarayanaClient implements CoordinatorClient {
                         case CLIENT_ERROR:
                         default:
                             if (404 == status.code()) {
-                                LOGGER.warning("Cancel LRA - Coordinator can't find id - LRAID: " + lraId);
+                                LOGGER.log(Level.WARNING, "Cancel LRA - Coordinator can't find id - LRAID: " + lraId);
                                 return Single.empty();
                             }
                             return connectionError("Unable to cancel lra " + lraId, status.code());
@@ -240,7 +240,7 @@ public class NarayanaClient implements CoordinatorClient {
                         case 404:
                             LOGGER.log(Level.WARNING,
                                     "Participant {0} leaving LRA - Coordinator can't find id - LRAID: {1}",
-                                    new Object[] {p, lraId});
+                                    p, lraId);
                             return Single.empty();
                         case 200:
                             logF("Participant {0} left - LRAID: {1}", p, lraId);
@@ -266,7 +266,7 @@ public class NarayanaClient implements CoordinatorClient {
                 .flatMap(res -> {
                     switch (res.status().code()) {
                         case 404:
-                            LOGGER.warning("Status LRA - Coordinator can't find id - LRAID: " + lraId);
+                            LOGGER.log(Level.WARNING, "Status LRA - Coordinator can't find id - LRAID: " + lraId);
                             return Single.just(LRAStatus.Closed);
                         case 200:
                         case 202:
@@ -349,7 +349,7 @@ public class NarayanaClient implements CoordinatorClient {
     }
 
     private <T> Single<T> connectionError(String message, int status) {
-        LOGGER.warning(message);
+        LOGGER.log(Level.WARNING, message);
         return Single.error(new CoordinatorConnectionException(message, status));
     }
 
@@ -362,7 +362,7 @@ public class NarayanaClient implements CoordinatorClient {
     }
 
     private void logF(String msg, Object... params) {
-        LOGGER.log(Level.FINE, msg, params);
+        LOGGER.log(Level.DEBUG, msg, params);
     }
 }
 

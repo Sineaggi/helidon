@@ -23,7 +23,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 import io.helidon.config.spi.RetryPolicy;
 
@@ -44,7 +43,7 @@ import static java.util.concurrent.TimeUnit.MILLISECONDS;
  */
 public final class SimpleRetryPolicy implements RetryPolicy {
 
-    private static final Logger LOGGER = Logger.getLogger(SimpleRetryPolicy.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(SimpleRetryPolicy.class.getName());
 
     private final int retries;
     private final Duration delay;
@@ -107,10 +106,10 @@ public final class SimpleRetryPolicy implements RetryPolicy {
         Throwable last = null;
         for (int i = 0; i <= retries; i++) {
             try {
-                LOGGER.finest("next delay: " + currentDelay);
+                LOGGER.log(System.Logger.Level.TRACE, "next delay: " + currentDelay);
                 overallTimeoutsLeft -= currentDelay.toMillis();
                 if (overallTimeoutsLeft < 0) {
-                    LOGGER.finest("overall timeout left [ms]: " + overallTimeoutsLeft);
+                    LOGGER.log(System.Logger.Level.TRACE, "overall timeout left [ms]: " + overallTimeoutsLeft);
                     throw new ConfigException(
                             "Cannot schedule the next call, the current delay would exceed the overall timeout.");
                 }

@@ -21,8 +21,6 @@ import java.util.Optional;
 import java.util.concurrent.Flow.Publisher;
 import java.util.concurrent.Flow.Subscriber;
 import java.util.concurrent.Flow.Subscription;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.common.GenericType;
 import io.helidon.common.http.DataChunk;
@@ -36,7 +34,7 @@ public abstract class MessageBodyContext implements MessageBodyFilters {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(MessageBodyContext.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(MessageBodyContext.class.getName());
 
     /**
      * Message body content subscription event listener.

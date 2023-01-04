@@ -15,7 +15,6 @@
  */
 package io.helidon.metrics.serviceapi;
 
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import io.helidon.common.http.Http;

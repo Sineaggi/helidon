@@ -42,8 +42,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import io.helidon.config.mp.MpConfigSources;
@@ -88,7 +86,7 @@ import org.jboss.shrinkwrap.descriptor.api.Descriptor;
  * and supplies to this class.
  */
 public class HelidonDeployableContainer implements DeployableContainer<HelidonContainerConfiguration> {
-    private static final Logger LOGGER = Logger.getLogger(HelidonDeployableContainer.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(HelidonDeployableContainer.class.getName());
     // runnables that must be executed on stop
     private static final ConcurrentLinkedQueue<Runnable> STOP_RUNNABLES = new ConcurrentLinkedQueue<>();
 

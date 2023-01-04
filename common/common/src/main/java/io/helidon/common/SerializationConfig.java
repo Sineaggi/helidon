@@ -30,8 +30,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -98,7 +96,7 @@ public final class SerializationConfig {
 
     private static final String PROPERTY_FILE = "META-INF/helidon/serial-config.properties";
     private static final String REJECT_ALL_PATTERN = "!*";
-    private static final Logger LOGGER = Logger.getLogger(SerializationConfig.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(SerializationConfig.class.getName());
     private static final AtomicReference<ConfigOptions> EXISTING_CONFIG = new AtomicReference<>();
 
     private final ConfigOptions options;
@@ -137,7 +135,7 @@ public final class SerializationConfig {
             // we should configure this instance as the global
             doConfigure();
         } else {
-            LOGGER.log(Level.FINER, "Will not configure defaults, "
+            LOGGER.log(Level.TRACE, "Will not configure defaults, "
                     + "there is already a serialization config in place: " + EXISTING_CONFIG.get());
         }
     }
@@ -184,7 +182,7 @@ public final class SerializationConfig {
                 AtomicBoolean logged = new AtomicBoolean();
                 configureTracingFilter(options, it -> {
                     if (it.serialClass() != null && logged.compareAndSet(false, true)) {
-                        LOGGER.warning("Deserialization attempted for class " + it.serialClass().getName()
+                        LOGGER.log(System.Logger.Level.WARNING, "Deserialization attempted for class " + it.serialClass().getName()
                                                + ", yet there is no global serial filter configured. "
                                                + "To automatically configure"
                                                + " a filter, please set system property \"" + PROP_NO_CONFIG_ACTION
@@ -194,7 +192,7 @@ public final class SerializationConfig {
                 });
                 return;
             case IGNORE:
-                LOGGER.finest("Ignoring that there is no global serial filter configured. To automatically configure"
+                LOGGER.log(System.Logger.Level.TRACE, "Ignoring that there is no global serial filter configured. To automatically configure"
                                       + " a filter, please set system property " + PROP_NO_CONFIG_ACTION
                                       + " to \"configure\"");
                 configureTracingFilter(options, null);
@@ -210,7 +208,7 @@ public final class SerializationConfig {
             Action action = options.onWrongConfig();
 
             if (action == Action.IGNORE) {
-                LOGGER.finest("Existing serialization config is ignored by Helidon.");
+                LOGGER.log(System.Logger.Level.TRACE, "Existing serialization config is ignored by Helidon.");
                 return;
             }
 
@@ -222,7 +220,7 @@ public final class SerializationConfig {
         String currentFilterString = System.getProperty("jdk.serialFilter");
 
         if (currentFilterString == null) {
-            LOGGER.finest("Programmatic filter configured: " + currentFilter);
+            LOGGER.log(System.Logger.Level.TRACE, "Programmatic filter configured: " + currentFilter);
             // somebody manually configured the filter
             ObjectInputFilter.Status status = currentFilter.checkInput(new ObjectInputFilter.FilterInfo() {
                 @Override
@@ -257,7 +255,7 @@ public final class SerializationConfig {
                                         + REJECT_ALL_PATTERN + "' as the last pattern.");
             }
         } else {
-            LOGGER.finest("System property filter configured: " + currentFilterString);
+            LOGGER.log(System.Logger.Level.TRACE, "System property filter configured: " + currentFilterString);
             // make sure reject-list is for all
             if (hasRejectAll(currentFilterString)) {
                 // this is OK
@@ -282,13 +280,13 @@ public final class SerializationConfig {
         case FAIL:
             throw new IllegalStateException(message);
         case WARN:
-            LOGGER.warning(message);
+            LOGGER.log(System.Logger.Level.WARNING, message);
             break;
         case CONFIGURE:
             throw new IllegalStateException("Cannot reconfigure current global deserialization filter."
                                                     + " Original message: " + message);
         case IGNORE:
-            LOGGER.finest("Ignoring global deserialization filter issue. Original message: " + message);
+            LOGGER.log(System.Logger.Level.TRACE, "Ignoring global deserialization filter issue. Original message: " + message);
             break;
         default:
             throw new IllegalStateException("Unexpected action to handle bad global deserialization filter: " + action);
@@ -329,7 +327,7 @@ public final class SerializationConfig {
 
     private void configureGlobalFilter(ConfigOptions options) {
         String pattern = options.filterPattern();
-        LOGGER.finest("Using serialization pattern " + pattern);
+        LOGGER.log(System.Logger.Level.TRACE, "Using serialization pattern " + pattern);
         ObjectInputFilter filter = ObjectInputFilter.Config.createFilter(pattern);
 
         configureTracingFilter(options, filter);
@@ -406,7 +404,7 @@ public final class SerializationConfig {
                         .map(String::toLowerCase)
                         .collect(Collectors.toList());
 
-                LOGGER.warning("System property \"" + sysProp + "\" is configured to \"" + property + "\", which is"
+                LOGGER.log(System.Logger.Level.WARNING, "System property \"" + sysProp + "\" is configured to \"" + property + "\", which is"
                                        + " not a valid Action. Valid actions: " + validActions
                                        + ". Using: " + defaultValue.toString().toLowerCase());
 
@@ -427,7 +425,7 @@ public final class SerializationConfig {
                         .map(String::toLowerCase)
                         .collect(Collectors.toList());
 
-                LOGGER.warning("System property \"" + PROP_TRACE + "\" is configured to \"" + property + "\", which is"
+                LOGGER.log(System.Logger.Level.WARNING, "System property \"" + PROP_TRACE + "\" is configured to \"" + property + "\", which is"
                                        + " not a valid TraceOption. Valid trace options: " + validTraceOptions
                                        + ". Using: " + defaultValue.toString().toLowerCase());
 
@@ -536,7 +534,7 @@ public final class SerializationConfig {
 
                     String pattern = props.getProperty("pattern");
                     if (pattern == null) {
-                        LOGGER.warning("Could not find 'pattern' property in " + url);
+                        LOGGER.log(System.Logger.Level.WARNING, "Could not find 'pattern' property in " + url);
                     } else {
                         if (!pattern.isBlank()) {
                             parts.add(pattern);
@@ -620,7 +618,7 @@ public final class SerializationConfig {
     }
 
     private static class TracingObjectInputFilter implements ObjectInputFilter {
-        private static final Logger LOGGER = Logger.getLogger(TracingObjectInputFilter.class.getName());
+        private static final System.Logger LOGGER = System.getLogger(TracingObjectInputFilter.class.getName());
 
         private final Set<Class<?>> reportedClasses = Collections.newSetFromMap(new ConcurrentHashMap<>());
         private final ObjectInputFilter delegate;

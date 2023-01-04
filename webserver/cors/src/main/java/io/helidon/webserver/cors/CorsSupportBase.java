@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 
@@ -53,7 +51,7 @@ import io.helidon.config.Config;
 public abstract class CorsSupportBase<Q, R, T extends CorsSupportBase<Q, R, T, B>,
         B extends CorsSupportBase.Builder<Q, R, T, B>> {
 
-    private static final Logger LOGGER = Logger.getLogger(CorsSupportBase.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(CorsSupportBase.class.getName());
 
     private final String name;
     private final CorsSupportHelper<Q, R> helper;

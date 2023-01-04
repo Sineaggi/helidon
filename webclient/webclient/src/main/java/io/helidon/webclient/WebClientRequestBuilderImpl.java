@@ -40,8 +40,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.common.GenericType;
 import io.helidon.common.context.Context;
@@ -86,7 +84,7 @@ import io.netty.util.AttributeKey;
  */
 class WebClientRequestBuilderImpl implements WebClientRequestBuilder {
 
-    private static final Logger LOGGER = Logger.getLogger(WebClientRequestBuilderImpl.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(WebClientRequestBuilderImpl.class.getName());
 
     private static final Map<ConnectionIdent, Set<ChannelRecord>> CHANNEL_CACHE = new ConcurrentHashMap<>();
     private static final List<DataPropagationProvider> PROPAGATION_PROVIDERS = HelidonServiceLoader
@@ -212,18 +210,18 @@ class WebClientRequestBuilderImpl implements WebClientRequestBuilder {
             for (ChannelRecord channelRecord : channels) {
                 Channel channel = channelRecord.channel;
                 if (channel.isOpen() && channel.attr(IN_USE).get().compareAndSet(false, true)) {
-                    if (LOGGER.isLoggable(Level.FINEST)) {
-                        LOGGER.finest(() -> "Reusing -> " + channel.hashCode() + ", settting in use -> true");
+                    if (LOGGER.isLoggable(System.Logger.Level.TRACE)) {
+                        LOGGER.log(System.Logger.Level.TRACE, () -> "Reusing -> " + channel.hashCode() + ", settting in use -> true");
                     }
                     return channelRecord.channelFuture;
                 }
-                if (LOGGER.isLoggable(Level.FINEST)) {
-                    LOGGER.finest(() -> "Not accepted -> " + channel.hashCode() + ", open -> "
+                if (LOGGER.isLoggable(System.Logger.Level.TRACE)) {
+                    LOGGER.log(System.Logger.Level.TRACE, () -> "Not accepted -> " + channel.hashCode() + ", open -> "
                             + channel.isOpen() + ", in use -> " + channel.attr(IN_USE).get());
                 }
             }
-            if (LOGGER.isLoggable(Level.FINEST)) {
-                LOGGER.finest(() -> "New connection to -> " + connectionIdent);
+            if (LOGGER.isLoggable(System.Logger.Level.TRACE)) {
+                LOGGER.log(System.Logger.Level.TRACE, () -> "New connection to -> " + connectionIdent);
             }
             URI uri = connectionIdent.base;
             ChannelFuture connect = bootstrap.connect(uri.getHost(), uri.getPort());
@@ -237,8 +235,8 @@ class WebClientRequestBuilderImpl implements WebClientRequestBuilder {
     }
 
     static void removeChannelFromCache(ConnectionIdent key, Channel channel) {
-        if (LOGGER.isLoggable(Level.FINEST)) {
-            LOGGER.finest(() -> "Removing from channel cache. Connection ident ->  " + key
+        if (LOGGER.isLoggable(System.Logger.Level.TRACE)) {
+            LOGGER.log(System.Logger.Level.TRACE, () -> "Removing from channel cache. Connection ident ->  " + key
                     + ", channel -> " + channel.hashCode());
         }
         CHANNEL_CACHE.get(key).remove(new ChannelRecord(channel));
@@ -536,7 +534,7 @@ class WebClientRequestBuilderImpl implements WebClientRequestBuilder {
         if (requestId == null) {
             requestId = REQUEST_NUMBER.incrementAndGet();
         }
-        //        LOGGER.finest(() -> "(client reqID: " + requestId + ") Request final URI: " + uri);
+        //        LOGGER.log(System.Logger.Level.TRACE, () -> "(client reqID: " + requestId + ") Request final URI: " + uri);
         CompletableFuture<WebClientServiceRequest> sent = new CompletableFuture<>();
         CompletableFuture<WebClientServiceResponse> responseReceived = new CompletableFuture<>();
         CompletableFuture<WebClientServiceResponse> complete = new CompletableFuture<>();
@@ -596,8 +594,8 @@ class WebClientRequestBuilderImpl implements WebClientRequestBuilder {
                     : bootstrap.connect(finalUri.getHost(), finalUri.getPort());
 
             channelFuture.addListener((ChannelFutureListener) future -> {
-                if (LOGGER.isLoggable(Level.FINEST)) {
-                    LOGGER.finest(() -> "(client reqID: " + requestId + ") "
+                if (LOGGER.isLoggable(System.Logger.Level.TRACE)) {
+                    LOGGER.log(System.Logger.Level.TRACE, () -> "(client reqID: " + requestId + ") "
                             + "Channel hashcode -> " + channelFuture.channel().hashCode());
                 }
                 channelFuture.channel().attr(REQUEST).set(clientRequest);

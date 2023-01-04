@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import io.helidon.config.Config;
@@ -188,7 +187,7 @@ public class OpenAPIConfigImpl implements OpenApiConfig {
          */
         public static final String SCHEMA = "schema";
 
-        private static final Logger LOGGER = Logger.getLogger(Builder.class.getName());
+        private static final System.Logger LOGGER = System.getLogger(Builder.class.getName());
 
         private static final Pattern MATCH_EVERYTHING = Pattern.compile(".*");
 

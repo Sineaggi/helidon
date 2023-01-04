@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import io.helidon.common.Prioritized;
@@ -82,7 +80,7 @@ public final class HelidonServiceLoader<T> implements Iterable<T> {
      */
     public static final String SYSTEM_PROPERTY_EXCLUDE = "io.helidon.common.serviceloader.exclude";
 
-    private static final Logger LOGGER = Logger.getLogger(HelidonServiceLoader.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(HelidonServiceLoader.class.getName());
 
     private final List<T> services;
 
@@ -292,7 +290,7 @@ public final class HelidonServiceLoader<T> implements Iterable<T> {
         private boolean notExcluded(ServiceWithPriority<T> service) {
             String className = service.instance.getClass().getName();
             if (excludedServiceClasses.contains(className)) {
-                LOGGER.finest(() -> "Excluding service implementation " + className);
+                LOGGER.log(System.Logger.Level.TRACE, () -> "Excluding service implementation " + className);
                 return false;
             }
             return true;
@@ -305,8 +303,8 @@ public final class HelidonServiceLoader<T> implements Iterable<T> {
                     .map(ServiceWithPriority::instance)
                     .collect(Collectors.toList());
 
-            if (LOGGER.isLoggable(Level.FINEST)) {
-                LOGGER.finest("Final order of enabled service implementations for service: " + serviceLoader);
+            if (LOGGER.isLoggable(System.Logger.Level.TRACE)) {
+                LOGGER.log(System.Logger.Level.TRACE, "Final order of enabled service implementations for service: " + serviceLoader);
                 result.stream()
                         .map(Object::getClass)
                         .map(Class::getName)
@@ -323,7 +321,7 @@ public final class HelidonServiceLoader<T> implements Iterable<T> {
             }
 
             for (String exclude : excludes.split(",")) {
-                LOGGER.finest(() -> "Adding exclude from system properties: " + exclude);
+                LOGGER.log(System.Logger.Level.TRACE, () -> "Adding exclude from system properties: " + exclude);
                 addExcludedClassName(exclude);
             }
         }

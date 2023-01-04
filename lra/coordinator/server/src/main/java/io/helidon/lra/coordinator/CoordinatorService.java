@@ -15,6 +15,7 @@
  */
 package io.helidon.lra.coordinator;
 
+import java.lang.System.Logger.Level;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Objects;
@@ -25,8 +26,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import io.helidon.common.LazyValue;
@@ -69,7 +68,7 @@ public class CoordinatorService implements Service {
     static final String COORDINATOR_URL_KEY = "url";
     static final String DEFAULT_COORDINATOR_URL = "http://localhost:8070/lra-coordinator";
 
-    private static final Logger LOGGER = Logger.getLogger(CoordinatorService.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(CoordinatorService.class.getName());
     private static final Set<LRAStatus> RECOVERABLE_STATUSES = Set.of(LRAStatus.Cancelling, LRAStatus.Closing, LRAStatus.Active);
     private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
     private static final MessageBodyWriter<JsonStructure> JSON_WRITER = JsonpSupport.create().writerInstance();
@@ -363,22 +362,22 @@ public class CoordinatorService implements Service {
                 lraPersistentRegistry.remove(lra.lraId());
             } else {
                 if (LRAStatus.Cancelling == lra.status().get()) {
-                    LOGGER.log(Level.FINE, "Recovering {0}", lra.lraId());
+                    LOGGER.log(Level.DEBUG, "Recovering {0}", lra.lraId());
                     lra.cancel();
                 }
                 if (LRAStatus.Closing == lra.status().get()) {
-                    LOGGER.log(Level.FINE, "Recovering {0}", lra.lraId());
+                    LOGGER.log(Level.DEBUG, "Recovering {0}", lra.lraId());
                     lra.close();
                 }
                 if (lra.checkTimeout() && lra.status().get().equals(LRAStatus.Active)) {
-                    LOGGER.log(Level.FINE, "Timeouting {0} ", lra.lraId());
+                    LOGGER.log(Level.DEBUG, "Timeouting {0} ", lra.lraId());
                     lra.timeout();
                 }
                 if (Set.of(LRAStatus.Closed, LRAStatus.Cancelled).contains(lra.status().get())) {
                     // If a participant is unable to complete or compensate immediately or because of a failure
                     // then it must remember the fact (by reporting its' status via the @Status method)
                     // until explicitly told that it can clean up using this @Forget annotation.
-                    LOGGER.log(Level.FINE, "Forgetting {0} {1}", new Object[] {lra.status().get(), lra.lraId()});
+                    LOGGER.log(Level.DEBUG, "Forgetting {0} {1}", lra.status().get(), lra.lraId());
                     lra.tryForget();
                     lra.tryAfter();
                 }

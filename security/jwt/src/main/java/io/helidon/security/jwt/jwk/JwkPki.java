@@ -29,8 +29,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.security.jwt.JwtException;
 import io.helidon.security.jwt.JwtUtil;
@@ -63,7 +61,7 @@ abstract class JwkPki extends Jwk {
      */
     public static final String PARAM_X509_SHA_256 = "x5t#S256";
 
-    private static final Logger LOGGER = Logger.getLogger(JwkPki.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(JwkPki.class.getName());
     private static final Base64.Decoder DECODER = Base64.getDecoder();
 
     private final Optional<PrivateKey> privateKey;
@@ -179,7 +177,7 @@ abstract class JwkPki extends Jwk {
         }
 
         private static List<X509Certificate> processCertChain(URI uri) {
-            LOGGER.log(Level.SEVERE, "Certificate chain from URL is not (yet) supported");
+            LOGGER.log(Level.ERROR, "Certificate chain from URL is not (yet) supported");
             return new LinkedList<>();
         }
 

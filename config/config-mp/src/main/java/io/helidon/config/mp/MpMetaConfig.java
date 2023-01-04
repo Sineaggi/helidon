@@ -23,7 +23,8 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Logger;
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 
 import io.helidon.config.Config;
 import io.helidon.config.ConfigSources;
@@ -33,7 +34,7 @@ final class MpMetaConfig {
     private static final String META_CONFIG_ENV_VAR = "HELIDON_MP_META_CONFIG";
     static final String META_CONFIG_SYSTEM_PROPERTY = "io.helidon.config.mp.meta-config";
 
-    private static final Logger LOGGER = Logger.getLogger(MpMetaConfig.class.getName());
+    private static final Logger LOGGER = System.getLogger(MpMetaConfig.class.getName());
 
     private MpMetaConfig() {
     }
@@ -76,7 +77,7 @@ final class MpMetaConfig {
     private static Optional<ConfigSource> findFile(String name) {
         Path path = Paths.get(name);
         if (Files.exists(path) && Files.isReadable(path) && !Files.isDirectory(path)) {
-            LOGGER.info("Found MP meta configuration file: " + path.toAbsolutePath());
+            LOGGER.log(Level.INFO, "Found MP meta configuration file: " + path.toAbsolutePath());
             return Optional.of(ConfigSources.file(path).build());
         }
         return Optional.empty();
@@ -86,7 +87,7 @@ final class MpMetaConfig {
         // so it is a classpath resource?
         URL resource = cl.getResource(name);
         if (null != resource) {
-            LOGGER.fine(() -> "Found MP meta configuration resource: " + resource.getPath());
+            LOGGER.log(Level.TRACE, () -> "Found MP meta configuration resource: " + resource.getPath());
             return Optional.of(ConfigSources.classpath(name).build());
         }
         return Optional.empty();

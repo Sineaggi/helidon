@@ -31,8 +31,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import io.helidon.common.Builder;
@@ -177,7 +175,7 @@ import org.reactivestreams.FlowAdapters;
         type = "properties")
 public class JmsConnector implements IncomingConnectorFactory, OutgoingConnectorFactory, Stoppable {
 
-    private static final Logger LOGGER = Logger.getLogger(JmsConnector.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(JmsConnector.class.getName());
 
     /**
      * Microprofile messaging JMS connector name.
@@ -325,7 +323,7 @@ public class JmsConnector implements IncomingConnectorFactory, OutgoingConnector
                 executor.shutdownNow();
             }
         } catch (InterruptedException e) {
-            LOGGER.log(Level.SEVERE, e, () -> "Error when awaiting scheduler termination.");
+            LOGGER.log(Level.ERROR, e, () -> "Error when awaiting scheduler termination.");
             scheduler.shutdownNow();
             executor.shutdownNow();
         }
@@ -334,7 +332,7 @@ public class JmsConnector implements IncomingConnectorFactory, OutgoingConnector
                 e.session().close();
                 e.connection().close();
             } catch (JMSException jmsException) {
-                LOGGER.log(Level.SEVERE, jmsException, () -> "Error when stopping JMS sessions.");
+                LOGGER.log(Level.ERROR, jmsException, () -> "Error when stopping JMS sessions.");
             }
         }
         LOGGER.info("JMS Connector gracefully stopped.");
@@ -469,7 +467,7 @@ public class JmsConnector implements IncomingConnectorFactory, OutgoingConnector
             sessionEntry.connection().start();
             return ReactiveStreams.fromPublisher(FlowAdapters.toPublisher(Multi.create(emitter)));
         } catch (JMSException e) {
-            LOGGER.log(Level.SEVERE, e, () -> "Error during JMS publisher preparation");
+            LOGGER.log(Level.ERROR, e, () -> "Error during JMS publisher preparation");
             return ReactiveStreams.failed(e);
         }
     }
@@ -490,7 +488,7 @@ public class JmsConnector implements IncomingConnectorFactory, OutgoingConnector
             AtomicReference<MessageMapper> mapper = new AtomicReference<>();
             return ReactiveStreams.<Message<?>>builder()
                     .flatMapCompletionStage(m -> consume(m, session, mapper, producer, config))
-                    .onError(t -> LOGGER.log(Level.SEVERE, t, () -> "Error intercepted from channel "
+                    .onError(t -> LOGGER.log(Level.ERROR, t, () -> "Error intercepted from channel "
                             + config.get(CHANNEL_NAME_ATTRIBUTE).asString().orElse("unknown")))
                     .ignore();
         } catch (JMSException e) {
@@ -548,7 +546,7 @@ public class JmsConnector implements IncomingConnectorFactory, OutgoingConnector
             if (message == null) {
                 return Optional.empty();
             }
-            LOGGER.fine(() -> "Received message: " + message);
+            LOGGER.log(Level.DEBUG, () -> "Received message: " + message);
             JmsMessage<?> preparedMessage = createMessage(nackHandler, message, executor, sessionEntry);
             emitter.emit(preparedMessage);
             return Optional.of(preparedMessage);

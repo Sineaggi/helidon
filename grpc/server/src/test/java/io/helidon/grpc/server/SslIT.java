@@ -18,7 +18,6 @@ package io.helidon.grpc.server;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import javax.net.ssl.SSLException;
@@ -60,7 +59,7 @@ public class SslIT {
     /**
      * The {@link java.util.logging.Logger} to use for logging.
      */
-    private static final Logger LOGGER = Logger.getLogger(SslIT.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(SslIT.class.getName());
 
     /**
      * The Helidon {@link GrpcServer} being tested.

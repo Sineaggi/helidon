@@ -18,7 +18,6 @@ package io.helidon.grpc.server;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import io.helidon.common.LogConfig;
 import io.helidon.common.context.Context;
@@ -44,7 +43,7 @@ public class ContextIT {
     /**
      * The {@link java.util.logging.Logger} to use for logging.
      */
-    private static final Logger LOGGER = Logger.getLogger(TracingIT.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(TracingIT.class.getName());
 
     /**
      * The Helidon {@link io.helidon.grpc.server.GrpcServer} being tested.

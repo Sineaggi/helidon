@@ -26,8 +26,6 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import io.helidon.webserver.ServerRequest;
@@ -57,7 +55,7 @@ import static jakarta.interceptor.Interceptor.Priority.PLATFORM_BEFORE;
  * Configure Jersey related things.
  */
 public class JaxRsCdiExtension implements Extension {
-    private static final Logger LOGGER = Logger.getLogger(JaxRsCdiExtension.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(JaxRsCdiExtension.class.getName());
 
     private final List<JaxRsApplication> applicationMetas = new LinkedList<>();
 
@@ -77,7 +75,7 @@ public class JaxRsCdiExtension implements Extension {
                 // we are only interested in classes - interface is most likely a REST client API
                 return;
             }
-            LOGGER.finest(() -> "Discovered resource class " + resourceClass.getName());
+            LOGGER.log(System.Logger.Level.TRACE, () -> "Discovered resource class " + resourceClass.getName());
             resources.add(resourceClass);
         }
     }
@@ -87,11 +85,11 @@ public class JaxRsCdiExtension implements Extension {
             Class<?> providerClass = processManagedBean.getAnnotatedBeanClass().getJavaClass();
             if (providerClass.isInterface()) {
                 // we are only interested in classes
-                LOGGER.finest(() -> "Discovered @Provider interface " + providerClass
+                LOGGER.log(System.Logger.Level.TRACE, () -> "Discovered @Provider interface " + providerClass
                         .getName() + ", ignored as we only support classes");
                 return;
             }
-            LOGGER.finest(() -> "Discovered @Provider class " + providerClass.getName());
+            LOGGER.log(System.Logger.Level.TRACE, () -> "Discovered @Provider class " + providerClass.getName());
             providers.add(providerClass);
         }
     }

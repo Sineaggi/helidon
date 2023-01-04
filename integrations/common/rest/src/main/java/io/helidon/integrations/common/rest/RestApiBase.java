@@ -23,7 +23,6 @@ import java.util.UUID;
 import java.util.concurrent.Flow;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 import io.helidon.common.context.Contexts;
 import io.helidon.common.http.DataChunk;
@@ -50,7 +49,7 @@ import jakarta.json.JsonWriterFactory;
  * such as security, processing of headers etc.
  */
 public abstract class RestApiBase implements RestApi {
-    private static final Logger LOGGER = Logger.getLogger(RestApiBase.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(RestApiBase.class.getName());
 
     private final WebClient webClient;
     private final FtHandler ftHandler;
@@ -79,7 +78,7 @@ public abstract class RestApiBase implements RestApi {
            ApiResponse.Builder<?, T> responseBuilder) {
 
         String requestId = requestId(request);
-        LOGGER.finest(() -> requestId + ": Invoking " + method + " on path " + path + " no entity expected.");
+        LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": Invoking " + method + " on path " + path + " no entity expected.");
 
         return ftHandler.invoke(responseSupplier(method, path, request, requestId))
                 .flatMapSingle(response -> handleResponse(path, request, method, requestId, response, responseBuilder));
@@ -93,7 +92,7 @@ public abstract class RestApiBase implements RestApi {
                        ApiEntityResponse.Builder<?, T, JsonObject> responseBuilder) {
 
         String requestId = requestId(request);
-        LOGGER.finest(() -> requestId + ": Invoking " + method + " on path " + path + " JSON entity expected.");
+        LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": Invoking " + method + " on path " + path + " JSON entity expected.");
 
         Supplier<Single<WebClientResponse>> responseSupplier = responseSupplier(method, path, request, requestId);
 
@@ -110,7 +109,7 @@ public abstract class RestApiBase implements RestApi {
 
         String requestId = requestId(request);
 
-        LOGGER.finest(() -> requestId + ": Invoking " + method + " on path " + path + " with bytes request");
+        LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": Invoking " + method + " on path " + path + " with bytes request");
 
         WebClientRequestBuilder requestBuilder = webClient.method(method)
                 .path(path);
@@ -137,7 +136,7 @@ public abstract class RestApiBase implements RestApi {
 
         String requestId = requestId(request);
 
-        LOGGER.finest(() -> requestId + ": Invoking " + method + " on path " + path + " with publisher response");
+        LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": Invoking " + method + " on path " + path + " with publisher response");
 
         request.responseMediaType(request.responseMediaType().orElse(MediaType.WILDCARD));
 
@@ -156,7 +155,7 @@ public abstract class RestApiBase implements RestApi {
 
         String requestId = requestId(request);
 
-        LOGGER.finest(() -> requestId + ": Invoking " + method + " on path " + path + " with bytes response");
+        LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": Invoking " + method + " on path " + path + " with bytes response");
 
         request.responseMediaType(request.responseMediaType().orElse(MediaType.WILDCARD));
 
@@ -175,7 +174,7 @@ public abstract class RestApiBase implements RestApi {
 
         String requestId = requestId(request);
 
-        LOGGER.finest(() -> requestId + ": Invoking " + method + " on path " + path + " with optional response");
+        LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": Invoking " + method + " on path " + path + " with optional response");
 
         return ftHandler.invoke(responseSupplier(method, path, request, requestId))
                 .flatMapSingle(response -> handleOptionalJsonResponse(path,
@@ -473,7 +472,7 @@ public abstract class RestApiBase implements RestApi {
 
         if (success) {
             if (isEntityExpected) {
-                LOGGER.finest(() -> requestId + ": " + method + " on path " + path + " returned " + status);
+                LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": " + method + " on path " + path + " returned " + status);
                 if (response.headers().contentLength().orElse(-1L) == 0) {
                     // explicit content length set to 0
                     return emptyResponse(path, request, method, requestId, response, responseBuilder);
@@ -488,7 +487,7 @@ public abstract class RestApiBase implements RestApi {
                 return emptyResponse(path, request, method, requestId, response, responseBuilder);
             }
         } else {
-            LOGGER.finest(() -> requestId + ": " + method + " on path " + path + " failed " + status);
+            LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": " + method + " on path " + path + " failed " + status);
             return errorResponse(path, request, method, requestId, response);
         }
     }
@@ -577,14 +576,14 @@ public abstract class RestApiBase implements RestApi {
         Http.ResponseStatus status = response.status();
 
         if (Http.Status.Family.of(status.code()) == Http.ResponseStatus.Family.SUCCESSFUL) {
-            LOGGER.finest(() -> requestId + ": " + method + " on path " + path + " returned " + status);
+            LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": " + method + " on path " + path + " returned " + status);
             return response.content()
                     .as(JsonObject.class)
                     .map(json -> jsonOkResponse(path, request, method, requestId, response, json, responseBuilder))
                     .onErrorResumeWithSingle(it -> Single
                             .error(readErrorFailedEntity(path, request, method, requestId, response, it)));
         } else {
-            LOGGER.finest(() -> requestId + ": " + method + " on path " + path + " failed " + status);
+            LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": " + method + " on path " + path + " failed " + status);
             return errorResponse(path, request, method, requestId, response);
         }
     }
@@ -613,10 +612,10 @@ public abstract class RestApiBase implements RestApi {
         boolean success = (Http.Status.Family.of(status.code()) == Http.ResponseStatus.Family.SUCCESSFUL);
 
         if (success) {
-            LOGGER.finest(() -> requestId + ": " + method + " on path " + path + " returned " + status);
+            LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": " + method + " on path " + path + " returned " + status);
             return noEntityOkResponse(path, request, method, requestId, response, responseBuilder);
         } else {
-            LOGGER.finest(() -> requestId + ": " + method + " on path " + path + " failed " + status);
+            LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": " + method + " on path " + path + " failed " + status);
             return errorResponse(path, request, method, requestId, response);
         }
     }
@@ -718,7 +717,7 @@ public abstract class RestApiBase implements RestApi {
                                   String requestId,
                                   WebClientResponse response,
                                   String entity) {
-        LOGGER.finest(() -> requestId + ": request failed for path " + path + ", error response: " + entity);
+        LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": request failed for path " + path + ", error response: " + entity);
 
         return RestException.builder()
                 .requestId(requestId)
@@ -746,7 +745,7 @@ public abstract class RestApiBase implements RestApi {
                                   String requestId,
                                   WebClientResponse response) {
 
-        LOGGER.finest(() -> requestId + ": request failed for path " + path);
+        LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": request failed for path " + path);
 
         String messagePrefix = "Failed to invoke " + method + " on path " + path
                 + " " + response.status().code();
@@ -776,7 +775,7 @@ public abstract class RestApiBase implements RestApi {
                                   WebClientResponse response,
                                   JsonObject errorObject) {
 
-        LOGGER.finest(() -> requestId + ": request failed for path " + path + ", error object: " + errorObject);
+        LOGGER.log(System.Logger.Level.TRACE, () -> requestId + ": request failed for path " + path + ", error object: " + errorObject);
 
         String messagePrefix = "Failed to invoke " + method + " on path " + path
                 + " " + response.status().code();

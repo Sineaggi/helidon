@@ -41,7 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import graphql.scalars.ExtendedScalars;
 import jakarta.json.bind.annotation.JsonbProperty;
@@ -271,7 +270,7 @@ final class SchemaGeneratorHelper {
     /**
      * Logger.
      */
-    private static final Logger LOGGER = Logger.getLogger(SchemaGeneratorHelper.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(SchemaGeneratorHelper.class.getName());
 
     /**
      * Indicates empty annotations.
@@ -1072,9 +1071,9 @@ final class SchemaGeneratorHelper {
      * @param logger  the {@link Logger} to use
      */
     protected static void ensureRuntimeException(Logger logger, String message, Throwable cause) {
-        logger.warning(message);
+        LOGGER.log(System.Logger.Level.WARNING, message);
         if (cause != null) {
-            logger.warning(getStackTrace(cause));
+            LOGGER.log(System.Logger.Level.WARNING, getStackTrace(cause));
         }
         throw new RuntimeException(message, cause);
     }
@@ -1097,9 +1096,9 @@ final class SchemaGeneratorHelper {
      * @param logger  the {@link Logger} to use
      */
     protected static void ensureConfigurationException(Logger logger, String message, Throwable cause) {
-        logger.warning(message);
+        LOGGER.log(System.Logger.Level.WARNING, message);
         if (cause != null) {
-            logger.warning(getStackTrace(cause));
+            LOGGER.log(System.Logger.Level.WARNING, getStackTrace(cause));
         }
         throw new GraphQlConfigurationException(message, cause);
     }

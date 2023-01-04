@@ -27,8 +27,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import javax.crypto.Cipher;
@@ -59,7 +57,7 @@ public final class HttpDigestAuthProvider extends SynchronousProvider implements
     private static final int UNAUTHORIZED_STATUS_CODE = 401;
     private static final int SALT_LENGTH = 16;
     private static final int AES_NONCE_LENGTH = 12;
-    private static final Logger LOGGER = Logger.getLogger(HttpDigestAuthProvider.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(HttpDigestAuthProvider.class.getName());
 
     private final List<HttpDigest.Qop> digestQopOptions = new LinkedList<>();
     private final SecureUserStore userStore;
@@ -126,7 +124,7 @@ public final class HttpDigestAuthProvider extends SynchronousProvider implements
 
             return Base64.getEncoder().encodeToString(result);
         } catch (Exception e) {
-            LOGGER.log(Level.SEVERE, "Encryption failed, though this should not happen. This is a bug.", e);
+            LOGGER.log(Level.ERROR, "Encryption failed, though this should not happen. This is a bug.", e);
             //returning an invalid nonce...
             return "failed_nonce_value";
         }
@@ -156,7 +154,7 @@ public final class HttpDigestAuthProvider extends SynchronousProvider implements
             token = DigestToken.fromAuthorizationHeader(headerValue.substring(DIGEST_PREFIX.length()),
                                                         env.method().toLowerCase());
         } catch (HttpAuthException e) {
-            LOGGER.log(Level.FINEST, "Failed to process digest token", e);
+            LOGGER.log(System.Logger.Level.TRACE, "Failed to process digest token", e);
             return failOrAbstain(e.getMessage());
         }
         // decrypt
@@ -164,7 +162,7 @@ public final class HttpDigestAuthProvider extends SynchronousProvider implements
         try {
             bytes = Base64.getDecoder().decode(token.getNonce());
         } catch (IllegalArgumentException e) {
-            LOGGER.log(Level.FINEST, "Failed to base64 decode nonce", e);
+            LOGGER.log(System.Logger.Level.TRACE, "Failed to base64 decode nonce", e);
             // not base 64
             return failOrAbstain("Nonce must be base64 encoded");
         }
@@ -188,7 +186,7 @@ public final class HttpDigestAuthProvider extends SynchronousProvider implements
                 return failOrAbstain("Nonce timeout");
             }
         } catch (Exception e) {
-            LOGGER.log(Level.FINEST, "Failed to validate nonce", e);
+            LOGGER.log(System.Logger.Level.TRACE, "Failed to validate nonce", e);
             return failOrAbstain("Invalid nonce value");
         }
 

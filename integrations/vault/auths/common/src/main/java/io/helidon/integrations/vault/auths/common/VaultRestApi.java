@@ -18,8 +18,6 @@ package io.helidon.integrations.vault.auths.common;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.common.http.Http;
 import io.helidon.common.reactive.Single;
@@ -39,7 +37,7 @@ import jakarta.json.JsonObject;
  * Uses the correct type for exception.
  */
 public class VaultRestApi extends RestApiBase {
-    private static final Logger LOGGER = Logger.getLogger(VaultRestApi.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(VaultRestApi.class.getName());
 
     protected VaultRestApi(BuilderBase<?> builder) {
         super(builder);
@@ -79,7 +77,7 @@ public class VaultRestApi extends RestApiBase {
                                 .build();
                     })
                     .onErrorResumeWithSingle(throwable -> {
-                        LOGGER.log(Level.FINEST,
+                        LOGGER.log(System.Logger.Level.TRACE,
                                    throwable,
                                    () -> "Failed to read response entity for status " + response.status() + ", ignoring for"
                                            + " optional response");
@@ -104,7 +102,7 @@ public class VaultRestApi extends RestApiBase {
         try {
             vaultErrors.addAll(VaultUtil.arrayToList(entity.getJsonArray("errors")));
         } catch (Exception e) {
-            LOGGER.log(Level.FINE, "Failed to read error response", e);
+            LOGGER.log(Level.DEBUG, "Failed to read error response", e);
             vaultErrors.add("Failed to read errors, entity: " + entity);
         }
 

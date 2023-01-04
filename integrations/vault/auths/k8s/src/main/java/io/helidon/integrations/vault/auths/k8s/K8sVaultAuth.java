@@ -21,7 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 import io.helidon.integrations.common.rest.RestApi;
@@ -37,7 +36,7 @@ import jakarta.annotation.Priority;
  */
 @Priority(2000)
 public class K8sVaultAuth implements VaultAuth {
-    private static final Logger LOGGER = Logger.getLogger(K8sVaultAuth.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(K8sVaultAuth.class.getName());
 
     private final String serviceAccountToken;
     private final String tokenRole;

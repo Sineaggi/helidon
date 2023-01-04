@@ -16,9 +16,9 @@
 
 package io.helidon.grpc.core;
 
+import java.lang.System.Logger;
+import java.lang.System.Logger.Level;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.grpc.stub.StreamObserver;
 
@@ -31,7 +31,7 @@ import io.grpc.stub.StreamObserver;
 public class LambdaStreamObserver<V>
         implements StreamObserver<V> {
 
-    private static final Logger LOGGER = Logger.getLogger(LambdaStreamObserver.class.getName());
+    private static final Logger LOGGER = System.getLogger(LambdaStreamObserver.class.getName());
 
     private final Consumer<V> onNextConsumer;
     private final Runnable onCompleteTask;
@@ -61,7 +61,7 @@ public class LambdaStreamObserver<V>
     }
 
     private static void logError(Throwable thrown) {
-        LOGGER.log(Level.INFO, thrown, () -> "Uncaught StreamObserver onError");
+        LOGGER.log(Level.INFO, () -> "Uncaught StreamObserver onError", thrown);
     }
 
     /**

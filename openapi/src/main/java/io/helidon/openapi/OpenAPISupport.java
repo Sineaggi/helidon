@@ -38,8 +38,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import io.helidon.common.http.Http;
@@ -139,7 +137,7 @@ public abstract class OpenAPISupport implements Service {
      */
     static final String OPENAPI_ENDPOINT_FORMAT_QUERY_PARAMETER = "format";
 
-    private static final Logger LOGGER = Logger.getLogger(OpenAPISupport.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(OpenAPISupport.class.getName());
 
     private static final String DEFAULT_STATIC_FILE_PATH_PREFIX = "META-INF/openapi.";
     private static final String OPENAPI_EXPLICIT_STATIC_FILE_LOG_MESSAGE_FORMAT = "Using specified OpenAPI static file %s";
@@ -369,7 +367,7 @@ public abstract class OpenAPISupport implements Service {
             if (isAnnotationProcessingEnabled(config)) {
                 expandModelUsingAnnotations(config, filteredIndexViews);
             } else {
-                LOGGER.log(Level.FINE, "OpenAPI Annotation processing is disabled");
+                LOGGER.log(Level.DEBUG, "OpenAPI Annotation processing is disabled");
             }
             OpenApiDocument.INSTANCE.filter(OpenApiProcessor.getFilter(config, getContextClassLoader()));
             OpenApiDocument.INSTANCE.initialize();
@@ -402,9 +400,9 @@ public abstract class OpenAPISupport implements Service {
                 OpenApiAnnotationScanner scanner = new OpenApiAnnotationScanner(config, filteredIndexView,
                         List.of(new HelidonAnnotationScannerExtension()));
                 OpenAPI modelForApp = scanner.scan();
-                if (LOGGER.isLoggable(Level.FINER)) {
+                if (LOGGER.isLoggable(Level.TRACE)) {
 
-                    LOGGER.log(Level.FINER, String.format("Intermediate model from filtered index view %s:%n%s",
+                    LOGGER.log(Level.TRACE, String.format("Intermediate model from filtered index view %s:%n%s",
                             filteredIndexView.getKnownClasses(), formatDocument(Format.YAML, modelForApp)));
                 }
                 aggregateModelRef.set(
@@ -445,7 +443,7 @@ public abstract class OpenAPISupport implements Service {
             }
 
             if (requestedMediaType.isEmpty()) {
-                LOGGER.log(Level.FINER,
+                LOGGER.log(Level.TRACE,
                            () -> String.format("Did not recognize requested media type %s; passing the request on",
                                                req.headers().acceptedTypes()));
                 req.next();
@@ -460,7 +458,7 @@ public abstract class OpenAPISupport implements Service {
         } catch (Exception ex) {
             resp.status(Http.Status.INTERNAL_SERVER_ERROR_500);
             resp.send("Error serializing OpenAPI document; " + ex.getMessage());
-            LOGGER.log(Level.SEVERE, "Error serializing OpenAPI document", ex);
+            LOGGER.log(Level.ERROR, "Error serializing OpenAPI document", ex);
         }
     }
 
@@ -485,7 +483,7 @@ public abstract class OpenAPISupport implements Service {
         OpenAPIMediaType matchingOpenAPIMediaType
                 = OpenAPIMediaType.byMediaType(resultMediaType)
                 .orElseGet(() -> {
-                    LOGGER.log(Level.FINER,
+                    LOGGER.log(Level.TRACE,
                             () -> String.format(
                                     "Requested media type %s not supported; using default",
                                     resultMediaType.toString()));
@@ -498,7 +496,7 @@ public abstract class OpenAPISupport implements Service {
         String result = cachedDocuments.computeIfAbsent(resultFormat,
                 fmt -> {
                     String r = formatDocument(fmt);
-                    LOGGER.log(Level.FINER,
+                    LOGGER.log(Level.TRACE,
                             "Created and cached OpenAPI document in {0} format",
                             fmt.toString());
                     return r;
@@ -583,7 +581,7 @@ public abstract class OpenAPISupport implements Service {
                         JsonValue jsonValue = reader.readValue();
                         return convertJsonValue(jsonValue);
                     } catch (Exception ex) {
-                        LOGGER.log(Level.SEVERE, String.format("Error parsing extension key: %s, value: %s", key, value), ex);
+                        LOGGER.log(Level.ERROR, String.format("Error parsing extension key: %s, value: %s", key, value), ex);
                     }
                     break;
 
@@ -824,9 +822,9 @@ public abstract class OpenAPISupport implements Service {
         String webContext() {
             String webContextPath = webContext.orElse(DEFAULT_WEB_CONTEXT);
             if (webContext.isPresent()) {
-                LOGGER.log(Level.FINE, "OpenAPI path set to {0}", webContextPath);
+                LOGGER.log(Level.DEBUG, "OpenAPI path set to {0}", webContextPath);
             } else {
-                LOGGER.log(Level.FINE, "OpenAPI path defaulting to {0}", webContextPath);
+                LOGGER.log(Level.DEBUG, "OpenAPI path defaulting to {0}", webContextPath);
             }
             return webContextPath;
         }
@@ -946,7 +944,7 @@ public abstract class OpenAPISupport implements Service {
             }
 
             try {
-                LOGGER.log(Level.FINE,
+                LOGGER.log(Level.DEBUG,
                         () -> String.format(
                                 OPENAPI_EXPLICIT_STATIC_FILE_LOG_MESSAGE_FORMAT,
                                 path.toAbsolutePath().toString()));
@@ -962,7 +960,7 @@ public abstract class OpenAPISupport implements Service {
         }
 
         private OpenApiStaticFile getDefaultStaticFile() {
-            final List<String> candidatePaths = LOGGER.isLoggable(Level.FINER) ? new ArrayList<>() : null;
+            final List<String> candidatePaths = LOGGER.isLoggable(Level.TRACE) ? new ArrayList<>() : null;
             for (OpenAPIMediaType candidate : OpenAPIMediaType.values()) {
                 for (String type : candidate.matchingTypes()) {
                     String candidatePath = DEFAULT_STATIC_FILE_PATH_PREFIX + type;
@@ -971,7 +969,7 @@ public abstract class OpenAPISupport implements Service {
                         is = getContextClassLoader().getResourceAsStream(candidatePath);
                         if (is != null) {
                             Path path = Paths.get(candidatePath);
-                            LOGGER.log(Level.FINE, () -> String.format(
+                            LOGGER.log(Level.DEBUG, () -> String.format(
                                     OPENAPI_DEFAULTED_STATIC_FILE_LOG_MESSAGE_FORMAT,
                                     path.toAbsolutePath().toString()));
                             return new OpenApiStaticFile(is, candidate.format());
@@ -992,7 +990,7 @@ public abstract class OpenAPISupport implements Service {
                 }
             }
             if (candidatePaths != null) {
-                LOGGER.log(Level.FINER,
+                LOGGER.log(Level.TRACE,
                         candidatePaths.stream()
                                 .collect(Collectors.joining(
                                         ",",

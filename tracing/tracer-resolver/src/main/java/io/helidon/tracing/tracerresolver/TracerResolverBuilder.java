@@ -16,7 +16,6 @@
 
 package io.helidon.tracing.tracerresolver;
 
-import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 import io.helidon.tracing.opentracing.OpenTracingTracerBuilder;
@@ -27,7 +26,7 @@ import io.opentracing.noop.NoopTracerFactory;
 import io.opentracing.util.GlobalTracer;
 
 class TracerResolverBuilder implements OpenTracingTracerBuilder<TracerResolverBuilder> {
-    private static final Logger LOGGER = Logger.getLogger(TracerResolverBuilder.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(TracerResolverBuilder.class.getName());
 
     private String helidonServiceName;
     private boolean enabled = true;

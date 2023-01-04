@@ -22,7 +22,6 @@ import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 import io.helidon.config.metadata.Configured;
@@ -110,7 +109,7 @@ import zipkin2.reporter.urlconnection.URLConnectionSender;
  */
 @Configured(prefix = "tracing", root = true, description = "Zipkin tracer configuration")
 public class ZipkinTracerBuilder implements OpenTracingTracerBuilder<ZipkinTracerBuilder> {
-    static final Logger LOGGER = Logger.getLogger(ZipkinTracerBuilder.class.getName());
+    static final System.Logger LOGGER = System.getLogger(ZipkinTracerBuilder.class.getName());
     static final String DEFAULT_PROTOCOL = "http";
     static final int DEFAULT_ZIPKIN_PORT = 9411;
     static final String DEFAULT_ZIPKIN_HOST = "127.0.0.1";

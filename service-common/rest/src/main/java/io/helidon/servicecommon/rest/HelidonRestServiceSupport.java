@@ -16,7 +16,6 @@
 package io.helidon.servicecommon.rest;
 
 import java.util.Objects;
-import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 import io.helidon.config.metadata.Configured;

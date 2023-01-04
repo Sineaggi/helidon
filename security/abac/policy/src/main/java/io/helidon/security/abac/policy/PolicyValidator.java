@@ -30,8 +30,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.common.Errors;
 import io.helidon.common.serviceloader.HelidonServiceLoader;
@@ -59,7 +57,7 @@ import io.helidon.security.providers.abac.spi.AbacValidator;
  * <code>&#64;PolicyStatement("${env.time.year &gt;= 2017 &amp;&amp; object.owner == subject.principal.id}")</code>
  */
 public final class PolicyValidator implements AbacValidator<PolicyValidator.PolicyConfig> {
-    private static final Logger LOGGER = Logger.getLogger(PolicyValidator.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(PolicyValidator.class.getName());
 
     private final List<PolicyExecutor> executors = new LinkedList<>();
 
@@ -266,7 +264,7 @@ public final class PolicyValidator implements AbacValidator<PolicyValidator.Poli
             try {
                 return (PolicyExecutor) clazz.getConstructor().newInstance();
             } catch (Exception e) {
-                LOGGER.log(Level.SEVERE, "Could not instantiate: " + className + ". Class must have a default public");
+                LOGGER.log(Level.ERROR, "Could not instantiate: " + className + ". Class must have a default public");
 
                 throw new SecurityException("Failed to load PolicyExecutor from class " + clazz, e);
             }

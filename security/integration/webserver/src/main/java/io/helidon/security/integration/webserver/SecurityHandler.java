@@ -30,8 +30,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.common.context.Context;
 import io.helidon.common.context.Contexts;
@@ -71,7 +69,7 @@ import static io.helidon.security.AuditEvent.AuditParam.plain;
 // we need to have all fields optional and this is cleaner than checking for null
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public final class SecurityHandler implements Handler {
-    private static final Logger LOGGER = Logger.getLogger(SecurityHandler.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(SecurityHandler.class.getName());
     private static final String KEY_ROLES_ALLOWED = "roles-allowed";
     private static final String KEY_AUTHENTICATOR = "authenticator";
     private static final String KEY_AUTHORIZER = "authorizer";
@@ -369,7 +367,7 @@ public final class SecurityHandler implements Handler {
                 })
                 .exceptionally(throwable -> {
                     tracing.error(throwable);
-                    LOGGER.log(Level.SEVERE, "Unexpected exception during security processing", throwable);
+                    LOGGER.log(Level.ERROR, "Unexpected exception during security processing", throwable);
                     abortRequest(res, null, Http.Status.INTERNAL_SERVER_ERROR_500.code(), Map.of());
                     return null;
                 });
@@ -506,7 +504,7 @@ public final class SecurityHandler implements Handler {
                                       CompletableFuture<AtxResult> future,
                                       AuthenticationResponse response) {
         if (authenticationOptional.orElse(false)) {
-            LOGGER.finest("Authentication failed, but was optional, so assuming anonymous");
+            LOGGER.log(System.Logger.Level.TRACE, "Authentication failed, but was optional, so assuming anonymous");
             return false;
         }
 
@@ -524,7 +522,7 @@ public final class SecurityHandler implements Handler {
                                      AuthenticationResponse response) {
 
         if (authenticationOptional.orElse(false)) {
-            LOGGER.finest("Authentication failed, but was optional, so assuming anonymous");
+            LOGGER.log(System.Logger.Level.TRACE, "Authentication failed, but was optional, so assuming anonymous");
             return false;
         } else {
             int defaultStatusCode = Http.Status.UNAUTHORIZED_401.code();

@@ -28,8 +28,6 @@ import java.util.ServiceLoader;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -137,7 +135,7 @@ import static io.helidon.security.providers.oidc.common.spi.TenantConfigFinder.D
  * </table>
  */
 public final class OidcSupport implements Service {
-    private static final Logger LOGGER = Logger.getLogger(OidcSupport.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(OidcSupport.class.getName());
     private static final Supplier<ExecutorService> OIDC_SUPPORT_SERVICE = ThreadPoolSupplier.create("oidc-support");
     private static final String CODE_PARAM_NAME = "code";
     private static final String STATE_PARAM_NAME = "state";
@@ -246,7 +244,7 @@ public final class OidcSupport implements Service {
                 .first(idTokenCookieHandler.cookieName());
 
         if (idTokenCookie.isEmpty()) {
-            LOGGER.finest("Logout request invoked without ID Token cookie");
+            LOGGER.log(System.Logger.Level.TRACE, "Logout request invoked without ID Token cookie");
             res.status(Http.Status.FORBIDDEN_403)
                     .send();
             return;
@@ -297,8 +295,8 @@ public final class OidcSupport implements Service {
         if (tenantId.isPresent()) {
             return Single.just(tenantId.get());
         } else {
-            if (LOGGER.isLoggable(Level.FINEST)) {
-                LOGGER.finest("Missing tenant id, could not find in either of: " + missingLocations
+            if (LOGGER.isLoggable(System.Logger.Level.TRACE)) {
+                LOGGER.log(System.Logger.Level.TRACE, "Missing tenant id, could not find in either of: " + missingLocations
                                       + "Falling back to the default tenant id: " + DEFAULT_TENANT_ID);
             }
             return Single.just(DEFAULT_TENANT_ID);
@@ -398,7 +396,7 @@ public final class OidcSupport implements Service {
             String scheme = oidcConfig.forceHttpsRedirects() || req.isSecure() ? "https" : "http";
             return scheme + "://" + host.get() + path;
         } else {
-            LOGGER.warning("Request without Host header received, yet post logout URI does not define a host");
+            LOGGER.log(System.Logger.Level.WARNING, "Request without Host header received, yet post logout URI does not define a host");
             return oidcConfig.toString();
         }
     }
@@ -472,15 +470,15 @@ public final class OidcSupport implements Service {
     private void sendError(ServerResponse response, Throwable t) {
         // we cannot send the response back, as we may expose information about internal workings
         // of the security of this service
-        if (LOGGER.isLoggable(Level.FINEST)) {
-            LOGGER.log(Level.FINEST, "Failed to process OIDC request", t);
+        if (LOGGER.isLoggable(System.Logger.Level.TRACE)) {
+            LOGGER.log(System.Logger.Level.TRACE, "Failed to process OIDC request", t);
         }
         response.status(Http.Status.INTERNAL_SERVER_ERROR_500)
                 .send();
     }
 
     private Optional<String> processError(ServerResponse serverResponse, Http.ResponseStatus status, String entity) {
-        LOGGER.log(Level.FINE,
+        LOGGER.log(Level.DEBUG,
                    "Invalid token or failed request when connecting to OIDC Token Endpoint. Response: " + entity
                            + ", response status: " + status);
 
@@ -489,7 +487,7 @@ public final class OidcSupport implements Service {
     }
 
     private Optional<String> processError(ServerResponse res, Throwable t, String message) {
-        LOGGER.log(Level.FINE, message, t);
+        LOGGER.log(Level.DEBUG, message, t);
 
         sendErrorResponse(res);
         return Optional.empty();

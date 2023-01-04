@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.common.configurable.Resource;
 
@@ -50,7 +48,7 @@ import jakarta.json.JsonReaderFactory;
  * </pre>
  */
 public final class JwkKeys {
-    private static final Logger LOGGER = Logger.getLogger(JwkKeys.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(JwkKeys.class.getName());
     private static final JsonReaderFactory JSON = Json.createReaderFactory(Collections.emptyMap());
 
     private final Map<String, Jwk> keyMap = new HashMap<>();
