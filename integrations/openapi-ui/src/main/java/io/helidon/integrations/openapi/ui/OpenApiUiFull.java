@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.common.http.Http;
 import io.helidon.common.http.MediaType;
@@ -56,7 +54,7 @@ class OpenApiUiFull extends OpenApiUiBase {
     private static final String LOGO_RESOURCE = "logo.svg";
     private static final String HELIDON_IO_LINK = "https://helidon.io";
 
-    private static final Logger LOGGER = Logger.getLogger(OpenApiUiFull.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(OpenApiUiFull.class.getName());
 
     private static final MediaType[] SUPPORTED_TEXT_MEDIA_TYPES_AT_UI_ENDPOINT = new MediaType[] {
             MediaType.TEXT_HTML,

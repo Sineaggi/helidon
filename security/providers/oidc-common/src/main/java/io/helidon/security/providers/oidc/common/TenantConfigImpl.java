@@ -19,7 +19,6 @@ package io.helidon.security.providers.oidc.common;
 import java.net.URI;
 import java.time.Duration;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import io.helidon.security.jwt.jwk.JwkKeys;
 
@@ -30,7 +29,7 @@ import jakarta.json.JsonObject;
  */
 class TenantConfigImpl implements TenantConfig {
 
-    private static final Logger LOGGER = Logger.getLogger(TenantConfigImpl.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(TenantConfigImpl.class.getName());
 
     private final URI authorizationEndpointUri;
     private final String clientId;
@@ -91,7 +90,7 @@ class TenantConfigImpl implements TenantConfig {
             }
         }
 
-        LOGGER.finest(() -> "OIDC Scope audience: " + scopeAudience);
+        LOGGER.log(System.Logger.Level.TRACE, () -> "OIDC Scope audience: " + scopeAudience);
     }
 
     @Override

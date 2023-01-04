@@ -27,8 +27,6 @@ import java.util.ServiceLoader;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import io.helidon.common.configurable.LruCache;
@@ -76,7 +74,7 @@ import static io.helidon.security.providers.oidc.common.spi.TenantConfigFinder.D
  * </ul>
  */
 public final class OidcProvider implements AuthenticationProvider, OutboundSecurityProvider {
-    private static final Logger LOGGER = Logger.getLogger(OidcProvider.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(OidcProvider.class.getName());
 
     private final boolean optional;
     private final OidcConfig oidcConfig;
@@ -192,8 +190,8 @@ public final class OidcProvider implements AuthenticationProvider, OutboundSecur
         if (tenantId.isPresent()) {
             return Single.just(tenantId.get());
         } else {
-            if (LOGGER.isLoggable(Level.FINEST)) {
-                LOGGER.finest("Missing tenant id, could not find in either of: " + missingLocations
+            if (LOGGER.isLoggable(System.Logger.Level.TRACE)) {
+                LOGGER.log(System.Logger.Level.TRACE, "Missing tenant id, could not find in either of: " + missingLocations
                                       + "Falling back to the default tenant id: " + DEFAULT_TENANT_ID);
             }
             return Single.just(DEFAULT_TENANT_ID);

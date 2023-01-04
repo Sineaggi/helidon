@@ -16,6 +16,7 @@
 
 package io.helidon.config;
 
+import java.lang.System.Logger.Level;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.concurrent.Executors;
@@ -25,8 +26,6 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiFunction;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.config.spi.ChangeEventType;
 import io.helidon.config.spi.PollingStrategy;
@@ -35,7 +34,7 @@ import io.helidon.config.spi.PollingStrategy;
  * A strategy which allows the user to schedule periodically fired polling event.
  */
 public final class ScheduledPollingStrategy implements PollingStrategy {
-    private static final Logger LOGGER = Logger.getLogger(ScheduledPollingStrategy.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(ScheduledPollingStrategy.class.getName());
 
     /*
      * This class will trigger checks in a periodic manner.
@@ -120,10 +119,10 @@ public final class ScheduledPollingStrategy implements PollingStrategy {
         } catch (RejectedExecutionException e) {
             if (executor.isShutdown()) {
                 // intentional shutdown of an executor service
-                LOGGER.log(Level.FINEST, "Executor service is shut down, polling is terminated for " + this, e);
+                LOGGER.log(Level.TRACE, "Executor service is shut down, polling is terminated for " + this, e);
             } else {
                 // exceptional condition
-                LOGGER.log(Level.SEVERE, "Failed to schedule next polling for " + this + ", polling will stop", e);
+                LOGGER.log(Level.ERROR, "Failed to schedule next polling for " + this + ", polling will stop", e);
             }
         }
     }

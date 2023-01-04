@@ -27,7 +27,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,7 +45,7 @@ import io.netty.handler.proxy.Socks5ProxyHandler;
  */
 public class Proxy {
 
-    private static final Logger LOGGER = Logger.getLogger(Proxy.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(Proxy.class.getName());
 
     /**
      * No proxy instance.
@@ -222,20 +221,20 @@ public class Proxy {
                 // we have an IP address
                 for (BiFunction<String, Integer, Boolean> ipMatcher : ipMatchers) {
                     if (ipMatcher.apply(host, port)) {
-                        LOGGER.finest(() -> "IP Address " + host + " bypasses proxy");
+                        LOGGER.log(System.Logger.Level.TRACE, () -> "IP Address " + host + " bypasses proxy");
                         return true;
                     }
                 }
-                LOGGER.finest(() -> "IP Address " + host + " uses proxy");
+                LOGGER.log(System.Logger.Level.TRACE, () -> "IP Address " + host + " uses proxy");
             } else {
                 // we have a host name
                 for (BiFunction<String, Integer, Boolean> hostMatcher : hostMatchers) {
                     if (hostMatcher.apply(host, port)) {
-                        LOGGER.finest(() -> "Host " + host + " bypasses proxy");
+                        LOGGER.log(System.Logger.Level.TRACE, () -> "Host " + host + " bypasses proxy");
                         return true;
                     }
                 }
-                LOGGER.finest(() -> "Host " + host + " uses proxy");
+                LOGGER.log(System.Logger.Level.TRACE, () -> "Host " + host + " uses proxy");
             }
 
             return false;

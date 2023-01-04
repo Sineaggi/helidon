@@ -16,7 +16,6 @@
 package io.helidon.integrations.micrometer;
 
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 import io.helidon.config.metadata.Configured;

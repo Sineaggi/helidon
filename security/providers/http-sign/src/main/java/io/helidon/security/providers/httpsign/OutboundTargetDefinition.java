@@ -20,7 +20,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import io.helidon.common.pki.KeyConfig;
 import io.helidon.config.Config;
@@ -179,7 +178,7 @@ public final class OutboundTargetDefinition {
      * Call {@link #build()} to create a new instance.
      */
     public static final class Builder implements io.helidon.common.Builder<Builder, OutboundTargetDefinition> {
-        private static final Logger LOGGER = Logger.getLogger(Builder.class.getName());
+        private static final System.Logger LOGGER = System.getLogger(Builder.class.getName());
 
         private String keyId;
         private String algorithm;

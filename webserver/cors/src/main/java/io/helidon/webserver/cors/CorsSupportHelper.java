@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 import io.helidon.common.http.Http;
 import io.helidon.config.Config;
@@ -67,7 +66,7 @@ class CorsSupportHelper<Q, R> {
     static final String METHOD_NOT_IN_ALLOWED_LIST = "CORS method is not in allowed list";
     static final String HEADERS_NOT_IN_ALLOWED_LIST = "CORS headers not in allowed list";
 
-    static final Logger LOGGER = Logger.getLogger(CorsSupportHelper.class.getName());
+    static final System.Logger LOGGER = System.getLogger(CorsSupportHelper.class.getName());
 
     private static final Supplier<Optional<CrossOriginConfig>> EMPTY_SECONDARY_SUPPLIER = Optional::empty;
 

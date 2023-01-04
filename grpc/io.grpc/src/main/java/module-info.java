@@ -25,8 +25,7 @@ module io.grpc {
 
     requires com.google.common;
     requires com.google.gson;
-    requires java.logging;
-    requires java.naming;
+        requires java.naming;
     requires io.perfmark;
 
     uses io.grpc.ManagedChannelProvider;

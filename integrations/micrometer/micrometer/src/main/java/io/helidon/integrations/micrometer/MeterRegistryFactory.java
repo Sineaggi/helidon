@@ -23,9 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.logging.Level;
 import java.util.logging.LogRecord;
-import java.util.logging.Logger;
 
 import io.helidon.common.http.Http;
 import io.helidon.config.Config;
@@ -91,7 +89,7 @@ public final class MeterRegistryFactory {
     static final String BUILTIN_REGISTRIES_CONFIG_KEY = "builtin-registries";
 
     private static final String NO_MATCHING_REGISTRY_ERROR_MESSAGE = "No registered MeterRegistry matches the request";
-    private static final Logger LOGGER = Logger.getLogger(MeterRegistryFactory.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(MeterRegistryFactory.class.getName());
 
     private static MeterRegistryFactory instance = create();
 
@@ -377,7 +375,7 @@ public final class MeterRegistryFactory {
             if (!candidateBuiltInRegistryTypes.isEmpty()) {
                 builtInRegistriesRequested.clear();
                 builtInRegistriesRequested.putAll(candidateBuiltInRegistryTypes);
-                LOGGER.log(Level.FINE,
+                LOGGER.log(Level.DEBUG,
                         () -> "Selecting built-in Micrometer registries " + candidateBuiltInRegistryTypes);
             }
         }

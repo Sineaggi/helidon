@@ -15,7 +15,6 @@
  */
 package io.helidon.metrics.serviceapi;
 
-import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 import io.helidon.metrics.api.ComponentMetricsSettings;
@@ -28,7 +27,7 @@ import org.eclipse.microprofile.metrics.MetricRegistry;
 
 public class MyMetricsServiceSupport extends HelidonRestServiceSupport {
 
-    private static final Logger LOGGER = Logger.getLogger(MyMetricsServiceSupport.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(MyMetricsServiceSupport.class.getName());
 
     private final Counter counter;
 

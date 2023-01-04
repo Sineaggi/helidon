@@ -20,7 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Objects;
-import java.util.logging.Level;
 
 import io.helidon.config.Config;
 

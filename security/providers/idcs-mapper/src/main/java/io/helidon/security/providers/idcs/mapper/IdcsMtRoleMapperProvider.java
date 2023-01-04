@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 import io.helidon.security.AuthenticationResponse;
@@ -135,7 +134,7 @@ public class IdcsMtRoleMapperProvider extends IdcsRoleMapperProviderBase {
         Optional<IdcsMtContext> maybeIdcsMtContext = extractIdcsMtContext(subject, request);
 
         if (!maybeIdcsMtContext.isPresent()) {
-            LOGGER.finest(() -> "Missing multitenant information IDCS CONTEXT: "
+            LOGGER.log(System.Logger.Level.TRACE, () -> "Missing multitenant information IDCS CONTEXT: "
                     + maybeIdcsMtContext
                     + ", subject: "
                     + subject);
@@ -431,7 +430,7 @@ public class IdcsMtRoleMapperProvider extends IdcsRoleMapperProviderBase {
                         + idcsInfraHostName.replaceAll(idcsInfraTenantId, tenantId)
                         + assertUrlSuffix;
 
-                LOGGER.finest(() -> "MT Asserter endpoint: " + url);
+                LOGGER.log(System.Logger.Level.TRACE, () -> "MT Asserter endpoint: " + url);
 
                 return generalClient.target(url);
             });
@@ -444,7 +443,7 @@ public class IdcsMtRoleMapperProvider extends IdcsRoleMapperProviderBase {
                         + idcsInfraHostName.replaceAll(idcsInfraTenantId, tenantId)
                         + tokenUrlSuffix
                         + idcsInfraTenantId;
-                LOGGER.finest(() -> "MT Token endpoint: " + url);
+                LOGGER.log(System.Logger.Level.TRACE, () -> "MT Token endpoint: " + url);
 
                 return appClient.target(url);
             });

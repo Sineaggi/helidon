@@ -25,8 +25,6 @@ import java.util.Objects;
 import java.util.ServiceLoader;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import io.helidon.common.Builder;
@@ -58,7 +56,7 @@ public class GrpcServiceBuilder
         extends AbstractServiceBuilder
         implements Builder<GrpcServiceBuilder, ServiceDescriptor> {
 
-    private static final Logger LOGGER = Logger.getLogger(GrpcServiceBuilder.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(GrpcServiceBuilder.class.getName());
 
     private final BeanManager beanManager;
 
@@ -218,7 +216,7 @@ public class GrpcServiceBuilder
             break;
         case UNKNOWN:
         default:
-            LOGGER.log(Level.SEVERE, () -> "Unrecognized method type " + annotation.type());
+            LOGGER.log(Level.ERROR, () -> "Unrecognized method type " + annotation.type());
         }
     }
 

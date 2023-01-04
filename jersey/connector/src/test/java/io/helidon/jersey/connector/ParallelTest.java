@@ -25,8 +25,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.extension.Extension;
@@ -43,7 +41,7 @@ import org.junit.jupiter.api.Test;
  * Tests the parallel execution of multiple requests.
  */
 public class ParallelTest extends AbstractTest {
-    private static final Logger LOGGER = Logger.getLogger(ParallelTest.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(ParallelTest.class.getName());
 
     private static final int PARALLEL_CLIENTS = 10;
     private static final String PATH = "/test";
@@ -67,7 +65,7 @@ public class ParallelTest extends AbstractTest {
             try {
                 Thread.sleep(10);
             } catch (InterruptedException ex) {
-                LOGGER.log(Level.SEVERE, null, ex);
+                LOGGER.log(Level.ERROR, null, ex);
             }
         }
     }

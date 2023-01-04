@@ -18,7 +18,7 @@
  * Helidon Common library.
  */
 module io.helidon.common {
-    requires java.logging;
-
+    requires static java.logging;
+    
     exports io.helidon.common;
 }

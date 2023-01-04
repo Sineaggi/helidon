@@ -18,8 +18,6 @@ package io.helidon.integrations.vault.auths.approle;
 
 import java.time.Instant;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.common.http.Http;
 import io.helidon.common.reactive.Single;
@@ -29,7 +27,7 @@ import io.helidon.integrations.vault.auths.common.VaultRestApi;
 import io.helidon.webclient.WebClientRequestBuilder;
 
 class AppRoleRestApi extends VaultRestApi {
-    private static final Logger LOGGER = Logger.getLogger(AppRoleRestApi.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(AppRoleRestApi.class.getName());
 
     private final AtomicReference<VaultTokenBase> currentToken = new AtomicReference<>();
 

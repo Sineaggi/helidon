@@ -15,7 +15,6 @@
  */
 package io.helidon.servicecommon.restcdi;
 
-import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 import io.helidon.servicecommon.rest.HelidonRestServiceSupport;

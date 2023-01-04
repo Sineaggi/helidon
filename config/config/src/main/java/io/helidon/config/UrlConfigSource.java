@@ -26,8 +26,6 @@ import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import io.helidon.common.media.type.MediaTypes;
 import io.helidon.config.spi.ChangeWatcher;
@@ -47,7 +45,7 @@ import io.helidon.config.spi.WatchableSource;
 public final class UrlConfigSource extends AbstractConfigSource
         implements WatchableSource<URL>, ParsableSource, PollableSource<Instant> {
 
-    private static final Logger LOGGER = Logger.getLogger(UrlConfigSource.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(UrlConfigSource.class.getName());
 
     private static final String GET_METHOD = "GET";
     private static final String URL_KEY = "url";
@@ -209,7 +207,7 @@ public final class UrlConfigSource extends AbstractConfigSource
             connection.connect();
         } catch (IOException e) {
             // considering this to be unavailable
-            LOGGER.log(Level.FINEST, "Failed to connect to " + url + ", considering this source to be missing", e);
+            LOGGER.log(System.Logger.Level.TRACE, "Failed to connect to " + url + ", considering this source to be missing", e);
             return Optional.empty();
         }
 
@@ -227,7 +225,7 @@ public final class UrlConfigSource extends AbstractConfigSource
             connection.connect();
         } catch (IOException e) {
             // considering this to be unavailable
-            LOGGER.log(Level.FINEST, "Failed to connect to " + url + ", considering this source to be missing", e);
+            LOGGER.log(System.Logger.Level.TRACE, "Failed to connect to " + url + ", considering this source to be missing", e);
             return Optional.empty();
         }
 
@@ -239,7 +237,7 @@ public final class UrlConfigSource extends AbstractConfigSource
         final Instant timestamp;
         if (connection.getLastModified() == 0) {
             timestamp = Instant.now();
-            LOGGER.fine("Missing GET '" + url + "' response header 'Last-Modified'. Used current time '"
+            LOGGER.log(Level.DEBUG, "Missing GET '" + url + "' response header 'Last-Modified'. Used current time '"
                                 + timestamp + "' as a content timestamp.");
         } else {
             timestamp = Instant.ofEpochMilli(connection.getLastModified());
@@ -263,8 +261,8 @@ public final class UrlConfigSource extends AbstractConfigSource
                 .or(() -> Optional.ofNullable(responseMediaType))
                 .or(() -> {
                     Optional<String> mediaType = probeContentType();
-                    if (LOGGER.isLoggable(Level.FINE)) {
-                        LOGGER.fine("HTTP response does not contain content-type, used guessed one: " + mediaType + ".");
+                    if (LOGGER.isLoggable(Level.DEBUG)) {
+                        LOGGER.log(Level.DEBUG, "HTTP response does not contain content-type, used guessed one: " + mediaType + ".");
                     }
                     return mediaType;
                 });

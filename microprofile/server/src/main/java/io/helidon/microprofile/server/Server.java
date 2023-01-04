@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 import io.helidon.common.configurable.ServerThreadPoolSupplier;
 import io.helidon.common.context.Contexts;
@@ -222,7 +221,7 @@ public interface Server {
                 server.basePath(basePath);
             }
 
-            STARTUP_LOGGER.finest("Configuration obtained");
+            STARTUP_LOGGER.log(System.Logger.Level.TRACE, "Configuration obtained");
 
             // explicit application configuration
             // if there are any resource classes explicitly added, create an application for them
@@ -252,7 +251,7 @@ public interface Server {
                 jaxRs.addSyntheticApplication(resourceClasses);
             }
 
-            STARTUP_LOGGER.finest("Jersey resource configuration");
+            STARTUP_LOGGER.log(System.Logger.Level.TRACE, "Jersey resource configuration");
 
             if (null == host) {
                 host = config.getOptionalValue("server.host", String.class).orElse("0.0.0.0");

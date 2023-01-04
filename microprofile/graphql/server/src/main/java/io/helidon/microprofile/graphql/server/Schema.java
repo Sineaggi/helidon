@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import graphql.GraphQLException;
@@ -42,7 +41,7 @@ import static io.helidon.microprofile.graphql.server.SchemaGeneratorHelper.getSa
  */
 class Schema implements ElementGenerator {
 
-    private static final Logger LOGGER = Logger.getLogger(Schema.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(Schema.class.getName());
 
     /**
      * Default query name.
@@ -147,7 +146,7 @@ class Schema implements ElementGenerator {
             return new graphql.schema.idl.SchemaGenerator().makeExecutableSchema(typeDefinitionRegistry, getRuntimeWiring());
         } catch (Exception e) {
             String message = "Unable to parse the generated schema";
-            LOGGER.warning(message + "\n" + getSchemaAsString());
+            LOGGER.log(System.Logger.Level.WARNING, message + "\n" + getSchemaAsString());
             throw new GraphQLException(message, e);
         }
     }
@@ -244,7 +243,7 @@ class Schema implements ElementGenerator {
 
         // register the scalars
         getScalars().forEach(s -> {
-            LOGGER.finest("Register Scalar: " + s);
+            LOGGER.log(System.Logger.Level.TRACE, "Register Scalar: " + s);
             builder.scalar(s.graphQLScalarType());
         });
 

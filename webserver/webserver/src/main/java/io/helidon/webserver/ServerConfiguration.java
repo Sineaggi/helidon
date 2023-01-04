@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 import javax.net.ssl.SSLContext;
 

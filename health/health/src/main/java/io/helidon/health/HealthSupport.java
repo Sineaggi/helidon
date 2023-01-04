@@ -28,8 +28,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import io.helidon.common.LazyValue;
@@ -68,7 +66,7 @@ public final class HealthSupport extends HelidonRestServiceSupport {
 
     private static final String SERVICE_NAME = "Health";
 
-    private static final Logger LOGGER = Logger.getLogger(HealthSupport.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(HealthSupport.class.getName());
 
     private static final JsonBuilderFactory JSON = Json.createBuilderFactory(Collections.emptyMap());
 
@@ -182,7 +180,7 @@ public final class HealthSupport extends HelidonRestServiceSupport {
 
         // handle timeouts and failures in execution
         result = result.onErrorResume(throwable -> {
-            LOGGER.log(Level.SEVERE, "Failed to call health checks", throwable);
+            LOGGER.log(Level.ERROR, "Failed to call health checks", throwable);
             HcResponse response = new HcResponse(HealthCheckResponse.down("InternalError"), true);
             return new HealthResponse(Http.Status.INTERNAL_SERVER_ERROR_500, toJson(Status.DOWN, List.of(response)));
         });
@@ -261,7 +259,7 @@ public final class HealthSupport extends HelidonRestServiceSupport {
         try {
             return new HcResponse(hc.call());
         } catch (Throwable e) {
-            LOGGER.log(Level.SEVERE, "Failed to compute health check for " + hc.getClass().getName(), e);
+            LOGGER.log(Level.ERROR, "Failed to compute health check for " + hc.getClass().getName(), e);
 
             return new HcResponse(HealthCheckResponse
                                           .named(hc.getClass().getName())

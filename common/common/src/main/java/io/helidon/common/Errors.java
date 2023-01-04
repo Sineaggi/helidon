@@ -20,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -144,7 +143,7 @@ public final class Errors extends LinkedList<Errors.ErrorMessage> {
                 logger.severe("Fatal issues found: " + fatals);
             } else {
                 if (warnings.length() > 0) {
-                    logger.warning("Warnings found: \n" + warnings);
+                    LOGGER.log(System.Logger.Level.WARNING, "Warnings found: \n" + warnings);
                 }
 
                 if (hints.length() > 0) {

@@ -18,7 +18,6 @@ package io.helidon.jersey.client;
 
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
-import java.util.logging.Logger;
 
 import io.helidon.common.context.Contexts;
 
@@ -38,7 +37,7 @@ import org.glassfish.jersey.spi.ThreadPoolExecutorProvider;
 public class ExecutorProvider extends ThreadPoolExecutorProvider {
 
     static final String THREAD_NAME_PREFIX = "helidon-client-async-executor";
-    private static final Logger LOGGER = Logger.getLogger(ExecutorProvider.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(ExecutorProvider.class.getName());
     private final LazyValue<Integer> asyncThreadPoolSize;
 
     /**

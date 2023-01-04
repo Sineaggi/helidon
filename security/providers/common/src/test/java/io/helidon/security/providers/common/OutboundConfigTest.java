@@ -97,7 +97,7 @@ public class OutboundConfigTest {
         // default value must be overriden by config, so the test is the same as above...
         OutboundTarget defaultValue = OutboundTarget.builder("default").build();
 
-        OutboundConfig targets = OutboundConfig.create(configWithDefaults, new OutboundTarget[] {defaultValue});
+        OutboundConfig targets = OutboundConfig.create(configWithDefaults, defaultValue);
 
         List<OutboundTarget> targetList = targets.targets();
 

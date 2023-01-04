@@ -17,7 +17,6 @@
 package io.helidon.integrations.vault.auths.approle;
 
 import java.util.Optional;
-import java.util.logging.Logger;
 
 import io.helidon.config.Config;
 import io.helidon.integrations.common.rest.RestApi;
@@ -33,7 +32,7 @@ import jakarta.annotation.Priority;
  */
 @Priority(1000)
 public class AppRoleVaultAuth implements VaultAuth {
-    private static final Logger LOGGER = Logger.getLogger(AppRoleVaultAuth.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(AppRoleVaultAuth.class.getName());
 
     private final String appRoleId;
     private final String secretId;
@@ -79,7 +78,7 @@ public class AppRoleVaultAuth implements VaultAuth {
                         .asOptional());
 
         if (maybeAppRoleId.isEmpty()) {
-            LOGGER.fine("AppRole vault authentication not used, as app-role.role-id is not defined");
+            LOGGER.log(Level.DEBUG, "AppRole vault authentication not used, as app-role.role-id is not defined");
             return Optional.empty();
         }
 
@@ -92,7 +91,7 @@ public class AppRoleVaultAuth implements VaultAuth {
                                                                  + "Cannot "
                                                                  + "authenticate."));
 
-        LOGGER.finest("Will try to login to Vault using app role id: " + appRoleId + " and a secret id.");
+        LOGGER.log(System.Logger.Level.TRACE, "Will try to login to Vault using app role id: " + appRoleId + " and a secret id.");
 
         // this may be changed in the future, when running with a sidecar (there should be a way to get the address from evn)
         String address = vaultBuilder.address()

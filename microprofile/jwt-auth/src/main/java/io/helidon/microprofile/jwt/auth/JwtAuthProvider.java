@@ -45,8 +45,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -101,7 +99,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  * Provider that provides JWT authentication.
  */
 public class JwtAuthProvider extends SynchronousProvider implements AuthenticationProvider, OutboundSecurityProvider {
-    private static final Logger LOGGER = Logger.getLogger(JwtAuthProvider.class.getName());
+    private static final System.Logger LOGGER = System.getLogger(JwtAuthProvider.class.getName());
 
     private static final JsonReaderFactory JSON = Json.createReaderFactory(Collections.emptyMap());
 
@@ -258,8 +256,8 @@ public class JwtAuthProvider extends SynchronousProvider implements Authenticati
                             signedJwt = SignedJwt.parseToken(token);
                         }
                     } catch (Exception e) {
-                        if (LOGGER.isLoggable(Level.FINEST)) {
-                            LOGGER.log(Level.FINEST, "Failed to parse token String into JWT", e);
+                        if (LOGGER.isLoggable(System.Logger.Level.TRACE)) {
+                            LOGGER.log(System.Logger.Level.TRACE, "Failed to parse token String into JWT", e);
                         }
                         //invalid token
                         return AuthenticationResponse.failed("Invalid token", e);
@@ -811,7 +809,7 @@ public class JwtAuthProvider extends SynchronousProvider implements Authenticati
                     return Optional.of(path);
                 }
             } catch (InvalidPathException e) {
-                LOGGER.log(Level.FINEST, "Could not locate path: " + uri, e);
+                LOGGER.log(System.Logger.Level.TRACE, "Could not locate path: " + uri, e);
             }
 
             return Optional.empty();
@@ -836,7 +834,7 @@ public class JwtAuthProvider extends SynchronousProvider implements Authenticati
                         url = new URL(uri);
                     } catch (MalformedURLException ignored2) {
                         //ignored not and valid URL
-                        LOGGER.finest(() -> "Configuration of public key(s) is not a valid URL: " + uri);
+                        LOGGER.log(System.Logger.Level.TRACE, () -> "Configuration of public key(s) is not a valid URL: " + uri);
                         return null;
                     }
                     is = url.openStream();
@@ -1112,7 +1110,7 @@ public class JwtAuthProvider extends SynchronousProvider implements Authenticati
                 String key = "helidon.mp.jwt.verify.publickey.location";
                 mpConfig.getOptionalValue(key, String.class).ifPresent(it -> {
                     publicKeyPath(it);
-                    LOGGER.warning("You have configured public key for JWT-Auth provider using a property"
+                    LOGGER.log(System.Logger.Level.WARNING, "You have configured public key for JWT-Auth provider using a property"
                                            + " reserved for TCK tests (" + key + "). Please use "
                                            + CONFIG_PUBLIC_KEY_PATH + " instead.");
                 });
